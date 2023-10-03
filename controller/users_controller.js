@@ -1,3 +1,5 @@
+const User = require('../models/users')
+
 module.exports.profile = function(req, res) {
     return res.render('users', {
         title: 'User Profile'
@@ -18,8 +20,19 @@ module.exports.signIn = function(req, res) {
 
 // Get the sign up page data
 
-module.exports.create = function(req, res) {
-
+module.exports.create = async function(req, res) {
+    let user = await User.findOne({
+        email: req.body.email
+    });
+    if (user != null){
+        console.log('User already exists', user);
+        return res.redirect('back');
+    }
+    else{
+        User.create(req.body);
+        return res.redirect('/users/sign-in');
+    }
+    
 }
 
 // Sign in and create a session for the user
