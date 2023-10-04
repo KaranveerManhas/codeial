@@ -12,7 +12,8 @@ module.exports.signUp = function(req, res) {
     });
 }
 
-module.exports.signIn = function(req, res) {
+module.exports.signIn = async function(req, res) {
+    // await User.deleteMany({});
     return res.render('user_sign_in', {
         title: "Sign In"
     });
@@ -29,8 +30,12 @@ module.exports.create = async function(req, res) {
         return res.redirect('back');
     }
     else{
-        User.create(req.body);
-        return res.redirect('/users/sign-in');
+        try{
+            User.create(req.body);
+            return res.redirect('/users/sign-in');
+        }catch(err) {
+            console.log(err);
+        }
     }
     
 }
