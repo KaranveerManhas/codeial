@@ -1,8 +1,12 @@
 const User = require('../models/users')
 
-module.exports.profile = function(req, res) {
-    return res.render('users', {
-        title: 'User Profile'
+module.exports.profile = async function(req, res) {
+    let user = await User.findById(req.cookies.user_id);
+    // console.log(user);
+    // console.log(req.cookies.user_id)
+    return res.render('user_profile', {
+        title: 'User Profile',
+        users: user
     });
 }
 
@@ -41,6 +45,31 @@ module.exports.create = async function(req, res) {
 }
 
 // Sign in and create a session for the user
-module.exports.createSession = function(req, res) {
+module.exports.createSession = async function(req, res) {
+    // Find user
+    // console.log(req.body);
+    try {
+        const user = await User.findOne({
+        email: req.body.email
+        });
+        // console.log(user);
+        if (user) {
+            if (user.password != req.body.password) {
+                console.log("Password mismatch");
+                return res.redirect('back');
+            }
+            res.cookie('user_id', user.id);
+            return res.redirect('/users/profile');
+        }else {
+            return res.redirect('back');
+        }
+    }catch(err) {
+        console.log("Error in signing in", err);
+    }
 
+}
+
+module.exports.endSession = function (req, res) {
+    res.clearCookie('user_id');
+    return res.redirect('/users/sign-in');
 }
