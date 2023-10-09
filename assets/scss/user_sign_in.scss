@@ -1,0 +1,30 @@
+.form-container {
+    width: 300px;
+    height: 250px;
+    margin: auto;
+    /* border: 1px solid white; */
+    padding: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 50px;
+    /* border: 1px solid white; */
+}
+
+form > div {
+    display: grid;
+    gap: 10px;
+}
+
+button {
+    margin: auto;
+    width: fit-content;
+    padding: 0.5em 1.5em;
+}

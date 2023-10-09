@@ -1,7 +1,8 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 html {
@@ -9,12 +10,11 @@ html {
 }
 
 body {
-  background-color: #0fa1a1;
+  background-color: rgb(15, 161, 161);
   color: white;
   text-align: center;
   height: inherit;
 }
-
 body #layout-main {
   height: inherit;
 }
@@ -30,4 +30,4 @@ button {
 
 button:hover {
   color: blue;
-}
+}/*# sourceMappingURL=layout.css.map */
