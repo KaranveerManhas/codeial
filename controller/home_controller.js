@@ -1,10 +1,19 @@
-module.exports.home = function(req, res) {
+const Post = require('../models/posts');
+
+module.exports.home = async function(req, res) {
     // console.log(req.cookies);
     // Change the value of cookie
     // res.cookie('cookie_name', new cookie value);
-    return res.render('home', {
-        title:'Home'
-    });
+    try {
+        let posts = await Post.find({}).populate('user');
+        // console.log(posts);
+        return res.render('home', {
+            title:'Home',
+            posts: posts
+        });
+    } catch (err) {
+        console.log("Error getting posts from database", err);
+    }
 }
 
 
