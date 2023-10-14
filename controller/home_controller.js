@@ -5,7 +5,12 @@ module.exports.home = async function(req, res) {
     // Change the value of cookie
     // res.cookie('cookie_name', new cookie value);
     try {
-        let posts = await Post.find({}).populate('user');
+        let posts = await Post.find({}).populate('user').populate({
+            path:'comments',
+            populate: {
+                path: 'user'
+            }    
+        });
         // console.log(posts);
         return res.render('home', {
             title:'Home',
