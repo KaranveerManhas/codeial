@@ -23,3 +23,20 @@ module.exports.create = async function(req, res) {
         console.log(err);
     }
 }
+
+module.exports.destroy = async function(req, res) {
+    try {
+        let comment = await Comment.findById(req.params.id);
+        if (!comment || comment.user != req.user.id) {
+            return res.redirect('back');
+        }
+        await Comment.findByIdAndDelete(comment.id);
+        let post = await Post.findById(comment.post);
+        post.comments.pull({
+            _id: comment.id
+        });
+        return res.redirect('back');
+    }catch (err) {
+        console.log(err);
+    }
+}
