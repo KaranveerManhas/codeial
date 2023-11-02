@@ -1,9 +1,16 @@
 const User = require('../models/users');
 
-module.exports.profile = function(req, res) {
-    return res.render('users', {
-        title: 'User Profile'
-    });
+module.exports.profile = async function(req, res) {
+    try{
+        let user = await User.findById(req.params.id);
+
+        return res.render('users', {
+            title: 'User Profile',
+            profile_user: user
+        });
+    }catch (err) {
+        console.log(err);
+    }
 }
 
 module.exports.signUp = function(req, res) {
@@ -18,7 +25,7 @@ module.exports.signUp = function(req, res) {
 module.exports.signIn = async function(req, res) {
     // await User.deleteMany({});
     if(req.isAuthenticated()){
-        return res.redirect('/users/profile');
+        return res.redirect('/');
     }
     return res.render('user_sign_in', {
         title: "Sign In"
@@ -46,9 +53,19 @@ module.exports.create = async function(req, res) {
     
 }
 
+module.exports.update = async function (req, res) {
+    if(req.user.id == req.params.id) {
+        await User.findByIdAndUpdate(req.params.id, req.body);
+        return res.redirect('back');
+    }else {
+        return res.status(401).send('Unauthorized');
+    }
+}
+
 // Sign in and create a session for the user
-module.exports.createSession = function(req, res) {
-    return res.redirect('/users/profile');
+module.exports.createSession = async function(req, res) {
+    req.flash('success', 'Logged in Successfully');
+    return res.redirect('/');
 }
 
 module.exports.destroySession = function(req, res, next) {
@@ -56,6 +73,7 @@ module.exports.destroySession = function(req, res, next) {
         if(err){
             return next(err);
         }
+        req.flash('success',"Logged out successfully");
         return res.redirect('/');
     });
 }

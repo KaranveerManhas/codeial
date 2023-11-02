@@ -7,18 +7,10 @@
   font-family: "Poppins", sans-serif;
 }
 
-html {
-  height: 100%;
-}
-
-body {
+#layout-main {
   background-color: rgb(15, 161, 161);
   color: white;
-  text-align: center;
-  height: inherit;
-}
-body #layout-main {
-  height: inherit;
+  height: 100vh;
 }
 
 button {
