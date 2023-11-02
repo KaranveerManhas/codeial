@@ -14,8 +14,9 @@ Codeial is a social media web application where users can post content and inter
 To run the Codeial project locally, follow these steps:
 
 1. Clone the repository:
-   
+   ```
    git clone https://github.com/KaranveerManhas/codeial.git
+   ```
    
 
 2. Install the dependencies:
