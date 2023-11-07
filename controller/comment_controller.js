@@ -7,7 +7,7 @@ module.exports.create = async function(req, res) {
         let posts = await Post.findById(req.body.post);
         // console.log(posts);
         if(posts) {
-            const comment =  await Comment.create({
+            let comment =  await Comment.create({
                 content: req.body.content,
                 post: req.body.post,
                 user: req.user._id
