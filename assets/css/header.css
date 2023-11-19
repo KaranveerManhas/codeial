@@ -8,23 +8,16 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 0 0.5rem;
-  color: white;
-}
-
-header h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-header ul {
-  list-style: none;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-header ul li a {
-  color: white;
-  text-decoration: none;
-}
+  color: white; }
+  header h2 {
+    font-size: 1.5rem;
+    font-weight: bold; }
+  header ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 10px; }
+    header ul li a {
+      color: white;
+      text-decoration: none; }

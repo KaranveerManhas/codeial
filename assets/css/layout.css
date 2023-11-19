@@ -3,14 +3,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
+  font-family: 'Poppins', sans-serif; }
 
 #layout-main {
   background-color: #0fa1a1;
   color: white;
-  height: 100vh;
-}
+  height: 100vh; }
 
 button {
   border: none;
@@ -18,9 +16,7 @@ button {
   background: transparent;
   color: white;
   cursor: pointer;
-  font-size: 1rem;
-}
+  font-size: 1rem; }
 
 button:hover {
-  color: blue;
-}
+  color: blue; }
