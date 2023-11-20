@@ -24,12 +24,12 @@ passport.use(new googleStrategy({
             }else{
                 // if not found create the user and set it as req.user
                 try{
-                    await User.create({
+                    let newUser = await User.create({
                         username: profile.displayName,
                         email: profile.emails[0].value,
                         password: crypto.randomBytes(20).toString('hex')
                     });
-                    return done(null, user);
+                    return done(null, newUser);
                 }catch(err){
                     console.log("Error in creating user in google auth strategy", err);
                     return;
