@@ -3,6 +3,8 @@ const router = express.Router();
 const passport = require('passport');
 
 const usersController = require('../controller/users_controller');
+const resetPasswordController = require('../controller/reset_password_controller');
+
 
 router.get('/profile/:id', passport.checkAuthentication, usersController.profile);
 router.post('/update/:id', passport.checkAuthentication, usersController.update);
@@ -23,5 +25,10 @@ router.get('/auth/google', passport.authenticate('google', {
 router.get('/auth/google/callback', passport.authenticate('google', {
     failureRedirect: '/users/sign-in'
 }), usersController.createSession);
+
+router.get('/reset-password', resetPasswordController.home);
+router.post('/reset-password/send-email', resetPasswordController.createAccessToken);
+router.get('/reset-password/reset', resetPasswordController.newPassword);
+router.post('/reset-password/update/:id', resetPasswordController.updatePassword);
 
 module.exports = router;
