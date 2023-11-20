@@ -10,7 +10,7 @@ exports.newResetRequest = (resetPasswordObject) => {
     nodemailer.transporter.sendMail({
         from: "manhaskaranveer@gmail.com",
         to: resetPasswordObject.user.email,
-        subject: "New Comment!",
+        subject: "Reset Your Password",
         html: htmlString
     }, (err, info) => {
         if(err){
