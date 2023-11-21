@@ -1,66 +1,99 @@
 const Comment = require('../models/comments');
 const Post = require('../models/posts');
 const commentsMailer = require('../mailers/comments_mailers');
-const commentEmailWorker = require('../workers/comment_email_worker');
 const queue = require('../config/kue');
+const commentEmailWorker = require('../workers/comment_email_worker');
+const Like = require('../models/like');
 
-module.exports.create = async function(req, res) {
+module.exports.create = async function(req, res){
+
     try{
-        // console.log(req.body);
-        let posts = await Post.findById(req.body.post);
-        // console.log(posts);
-        if(posts) {
-            let comment =  await Comment.create({
+        let post = await Post.findById(req.body.post);
+
+        if (post){
+            let comment = await Comment.create({
                 content: req.body.content,
                 post: req.body.post,
                 user: req.user._id
             });
-            // await comment.save();
 
-            posts.comments.push(comment);
-            // console.log(posts);
-            await posts.save();
+            await post.comments.push(comment);
+            await post.save();
+            
             comment = await comment.populate('user', 'username email');
             // commentsMailer.newComment(comment);
+
             let job = queue.create('emails', comment).save(function(err){
-                if(err){
-                    console.log("Error in creating queue", err);
+                if (err){
+                    console.log('Error in sending to the queue', err);
+                    return;
                 }
-                console.log("Job queued", job.id);
-            });
+                console.log('job enqueued', job.id);
+
+            })
 
             if (req.xhr){
-                return res.status(201).json({
-                    data:{
+                
+    
+                return res.status(200).json({
+                    data: {
                         comment: comment
                     },
-                    message: "Post Created!"
+                    message: "Post created!"
                 });
             }
-            req.flash('success', "Comment created");
+
+
+            req.flash('success', 'Comment published!');
+
             res.redirect('/');
         }
-    } catch(err) {
+    }catch(err){
         req.flash('error', err);
-        console.log(err);
+        return;
     }
+    
 }
 
-module.exports.destroy = async function(req, res) {
-    try {
+
+module.exports.destroy = async function(req, res){
+
+    try{
         let comment = await Comment.findById(req.params.id);
-        if (!comment || comment.user != req.user.id) {
+
+        if (comment.user == req.user.id){
+
+            let postId = comment.post;
+
+            await Comment.deleteOne(comment);
+
+            let post = Post.findByIdAndUpdate(postId, { $pull: {comments: req.params.id}});
+
+            // CHANGE :: destroy the associated likes for this comment
+            await Like.deleteMany({likeable: comment._id, onModel: 'Comment'});
+
+
+            // send the comment id which was deleted back to the views
+            if (req.xhr){
+                return res.status(200).json({
+                    data: {
+                        comment_id: req.params.id
+                    },
+                    message: "Post deleted"
+                });
+            }
+
+
+            req.flash('success', 'Comment deleted!');
+
+            return res.redirect('back');
+        }else{
+            req.flash('error', 'Unauthorized');
             return res.redirect('back');
         }
-        await Comment.findByIdAndDelete(comment.id);
-        let post = await Post.findById(comment.post);
-        post.comments.pull({
-            _id: comment.id
-        });
-        req.flash('success', 'Comment deleted successfully');
-        return res.redirect('back');
-    }catch (err) {
+    }catch(err){
         req.flash('error', err);
-        console.log(err);
+        return;
     }
+    
 }

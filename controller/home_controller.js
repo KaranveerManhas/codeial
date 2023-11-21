@@ -6,12 +6,18 @@ module.exports.home = async function(req, res) {
     // Change the value of cookie
     // res.cookie('cookie_name', new cookie value);
     try {
-        let posts = await Post.find({}).populate('user').populate({
+        let posts = await Post.find({})
+        .sort('-createdAt')
+        .populate('user')
+        .populate({
             path:'comments',
             populate: {
                 path: 'user'
-            }    
-        });
+            },
+            populate: {
+                path: 'likes'
+            }  
+        }).populate('comments').populate('likes');
         // console.log(posts);
         let users = await User.find({});
 
