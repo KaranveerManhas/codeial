@@ -11,9 +11,12 @@ router.post('/update/:id', passport.checkAuthentication, usersController.update)
 router.get('/sign-up', usersController.signUp);
 router.get('/sign-in', usersController.signIn);
 router.post('/create', usersController.create);
+router.get('/friend/:id', usersController.checkFriend);
+router.post('/friend/add/:id', usersController.addFriend);
+router.post('/friend/remove/:id', usersController.removeFriend);
 // Use passport as a middleware to authenticate
 router.post('/create-session', passport.authenticate(
-    'local', 
+    'local',
     {failureRedirect: '/users/sign-in'}
     ), usersController.createSession);
 

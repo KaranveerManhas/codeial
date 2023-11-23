@@ -1,4 +1,5 @@
 const User = require('../models/users');
+const Friendship = require('../models/friendship');
 const fs = require('fs');
 const path = require("path");
 
@@ -98,6 +99,69 @@ module.exports.update = async function (req, res) {
     }else {
         req.flash('error', "Unauthorized");
         return res.status(401).send('Unauthorized');
+    }
+}
+
+module.exports.checkFriend = async function(req, res){
+    try{
+        let isFriend = false;
+    
+        let friends = await Friendship.findOne({
+            sender: req.user.id,
+            receiver: req.params.id
+        });
+        if(friends){
+            isFriend = true;
+        }
+        return res.status(200).json({
+            message: "Request Successful",
+            data: {
+                data: isFriend
+            }
+        });
+
+    }catch(err){
+        console.log("Error in checkFriend module: ", err);
+    }
+}
+
+module.exports.addFriend = async function(req, res){
+    try{
+        let sender = await User.findById(req.user.id);
+        let receiver = await User.findById(req.params.id);
+
+        let friendship = await Friendship.create({
+            sender: sender._id,
+            receiver: receiver._id
+        });
+        
+        return res.status(200).json({
+            message: "Request Successful",
+            data: {
+                sender: sender,
+                receiver: receiver
+            }
+        });
+
+    }catch(err){
+        console.log("Error in addFriend module: ", err);
+    }
+}
+
+module.exports.removeFriend = async function(req, res){
+    try{
+        let friend = await Friendship.deleteOne({
+            sender: req.user.id,
+            receiver: req.params.id
+        });
+
+        return res.status(200).json({
+            message: "Friend Removed",
+            data: friend
+        });
+
+    }catch(err){
+        console.log("Error in removeFriend module: ", err);
     }
 }
 
