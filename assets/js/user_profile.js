@@ -17,7 +17,7 @@
                         friendDom.html(friendButton);
                         updateFriendship(friendButton);
                     },
-                    fail: function(error){
+                    error: function(error){
                         console.log(error.responseText);
                     }
                 });
@@ -49,7 +49,7 @@
                         console.log(data);
                         updateFriendshipDom();
                     },
-                    fail: function(err){
+                    error: function(err){
                         console.log(err.responseText);
                     }
                 });
