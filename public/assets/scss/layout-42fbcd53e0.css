@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+#layout-main {
+  background-color: rgb(15, 161, 161);
+  color: white;
+  height: 100vh;
+}
+
+button {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:hover {
+  color: blue;
+}/*# sourceMappingURL=layout.css.map */

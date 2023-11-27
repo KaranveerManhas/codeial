@@ -1,7 +1,14 @@
 const express = require('express');
+// Environment variables
+const dotenv = require('dotenv');
+dotenv.config();
+// console.log(process.env);
+const env = require('./config/environment');
+const app = express();
+const logger = require('morgan');
+require('./config/view-helper')(app);
 const sassMiddleware = require('node-sass-middleware');
 const cookieParser = require('cookie-parser');
-const app = express();
 const port = 8000;
 const expressLayout = require('express-ejs-layouts');
 const db = require('./config/mongoose');
@@ -14,18 +21,33 @@ const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const customMiddleware = require('./config/flashMiddleware');
 
-app.use(sassMiddleware({
-    src: './assets/scss',
-    dest: './assets/css',
-    debug: true,
-    outputStyle: 'extended',
-    prefix: '/css'
-}));
+// Setup chat server to be used with socket.io
+const chatServer = require('http').Server(app);
+const chatSockets = require('./config/chat_sockets').chatSockets(chatServer);
+chatServer.listen(5000);
+console.log('Chat server is listening on port 4000');
+const path = require('path');
+
+if(env.name == 'development'){
+    app.use(sassMiddleware({
+        src: path.join(__dirname, env.asset_path, 'scss'),
+        dest: path.join(__dirname, env.asset_path, 'css'),
+        debug: true,
+        outputStyle: 'extended',
+        prefix: '/css'
+    }));
+}
+
 
 app.use(express.urlencoded());
 app.use(cookieParser());
-app.use(express.static('./assets'));
+app.use(express.static(env.asset_path));
 app.use('/uploads', express.static(__dirname + '/uploads'));
+
+
+app.use(logger(env.morgan.mode, env.morgan.options));
+
+
 app.use(expressLayout);
 // Extract styles and scripts from subpages into the layout
 app.set('layout extractStyles', true);
@@ -38,7 +60,7 @@ app.set('views', './views');
 app.use(session({
     name: 'codeial',
     // Todo change the secret before deployment in production mode
-    secret: 'manhas',
+    secret: env.session_cookie_key,
     saveUninitialized: false,
     resave: false,
     cookie: {

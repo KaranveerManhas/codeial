@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+footer {
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  height: 50px;
+  display: flex;
+  background: teal;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.5rem; }
+  footer .links {
+    display: flex;
+    gap: 20px;
+    font-size: 1.1rem; }
+    footer .links a {
+      text-decoration: none;
+      color: white; }
+      footer .links a:hover {
+        color: black; }
